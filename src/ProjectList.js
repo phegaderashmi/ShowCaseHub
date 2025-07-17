@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 
 const ProjectList = () => {
   const [projects, setProjects] = useState(() => {
-    // Load only once from localStorage safely
     const saved = localStorage.getItem("projects");
     console.log("Initial load from localStorage:", saved);
     return saved ? JSON.parse(saved) : [];
@@ -10,7 +9,6 @@ const ProjectList = () => {
 
   const [newLink, setNewLink] = useState("");
 
-  // Save to localStorage whenever projects change
   useEffect(() => {
     console.log("Saving to localStorage:", projects);
     localStorage.setItem("projects", JSON.stringify(projects));
@@ -18,9 +16,7 @@ const ProjectList = () => {
 
   const handleAdd = () => {
     if (newLink.trim() === "") return;
-
-    const updated = [...projects, newLink.trim()];
-    setProjects(updated);
+    setProjects([...projects, newLink.trim()]);
     setNewLink("");
   };
 
@@ -30,18 +26,34 @@ const ProjectList = () => {
   };
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>🌐 My Hosted Projects</h2>
+    <div
+      className="container"
+      style={{
+        maxWidth: "600px",
+        margin: "0 auto",
+        padding: "20px",
+        wordBreak: "break-word",
+      }}
+    >
+      <h2 className="text-center mb-4">🌐 My Hosted Projects</h2>
 
-      <ul>
+      <ul className="list-unstyled">
         {projects.map((link, index) => (
-          <li key={index}>
-            <a href={link} target="_blank" rel="noopener noreferrer">
+          <li
+            key={index}
+            className="d-flex justify-content-between align-items-center mb-2 bg-light p-2 rounded"
+          >
+            <a
+              href={link}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ flex: 1, color: "#007bff", textDecoration: "none" }}
+            >
               {link}
             </a>
             <button
+              className="btn btn-sm btn-danger ms-2"
               onClick={() => handleRemove(index)}
-              style={{ marginLeft: "10px" }}
             >
               ❌
             </button>
@@ -49,14 +61,18 @@ const ProjectList = () => {
         ))}
       </ul>
 
-      <input
-        type="text"
-        value={newLink}
-        onChange={(e) => setNewLink(e.target.value)}
-        placeholder="Enter project link"
-        style={{ marginRight: "10px", padding: "6px", width: "300px" }}
-      />
-      <button onClick={handleAdd}>➕ Add</button>
+      <div className="d-flex flex-column flex-sm-row mt-4 gap-2">
+        <input
+          type="text"
+          value={newLink}
+          onChange={(e) => setNewLink(e.target.value)}
+          placeholder="Enter project link"
+          className="form-control"
+        />
+        <button className="btn btn-primary" onClick={handleAdd}>
+          ➕ Add
+        </button>
+      </div>
     </div>
   );
 };
